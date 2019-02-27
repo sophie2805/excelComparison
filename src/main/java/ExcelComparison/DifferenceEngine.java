@@ -1,5 +1,6 @@
 package ExcelComparison;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -68,5 +69,31 @@ public class DifferenceEngine {
         String discrepancySummary = "Discrepancy summary: " + String.join(", " , unmatchColumns);
         differenceByRow.set(1, discrepancySummary);
         return differenceByRow;
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        WorkbookData source = new WorkbookData("/Users/Sophie/Downloads/starred.xlsx");
+        WorkbookData target = new WorkbookData("/Users/Sophie/Downloads/starred_target.xlsx");
+        int sheetAmount = source.getSheetsData().size() >= target.getSheetsData().size() ?
+                source.getSheetsData().size() : target.getSheetsData().size();
+
+        for(int i = 0; i < sheetAmount; i ++){
+            if(source.getSheetsData().size()-1 < i){
+                System.out.println("Source excel does not have sheet " + (i + 1));
+                continue;
+            }
+            else if(target.getSheetsData().size()-1 < i) {
+                System.out.println("Target excel does not have sheet " + (i + 1));
+                continue;
+            }
+            else{
+                List<String> comparisonResult = DifferenceEngine.Differ(source.getSheetsData().get(i),
+                        target.getSheetsData().get(i));
+                for(String s : comparisonResult)
+                    System.out.println(s);
+                System.out.println("----------------------------------------------------");
+            }
+        }
     }
 }
