@@ -20,22 +20,25 @@ public class ExcelUtility {
 
     public static List<SheetData> readExcel2007(String filePath) throws IOException{
         List<SheetData> rawData = new ArrayList<SheetData>();
-        Map<String, String> columnHeader = new HashMap<String, String>();
         InputStream iS = new FileInputStream(filePath);
 
         try{
             XSSFWorkbook wb = new XSSFWorkbook(iS);
             int sheetAmount = wb.getNumberOfSheets();
-            List<List<String>> allData = new ArrayList<List<String>>();
+
             for(int i = 0; i < sheetAmount; i ++){
+                List<List<String>> allData = new ArrayList<List<String>>();
+                Map<String, String> columnHeader = new HashMap<String, String>();
                 XSSFSheet sheet = wb.getSheetAt(i);
                 String sheetName = sheet.getSheetName();
                 XSSFRow headerRow = sheet.getRow(0);
                 if(headerRow != null){
-                    for(int j = 0; j < headerRow.getLastCellNum(); j ++)
-                        if(headerRow.getCell(j) != null && headerRow.getCell(j).getStringCellValue().trim() != null
-                        && headerRow.getCell(j).getStringCellValue().trim() != "")
-                            columnHeader.put(headerRow.getCell(j).getAddress().toString().replaceAll("\\d+",""), headerRow.getCell(j).getStringCellValue());
+                    for(int j = 0; j < headerRow.getLastCellNum(); j ++) {
+                        DataFormatter formatter = new DataFormatter();
+                        String h = formatter.formatCellValue(headerRow.getCell(j));
+                        if (headerRow.getCell(j) != null && h.trim() != null && h.trim() != "")
+                            columnHeader.put(headerRow.getCell(j).getAddress().toString().replaceAll("\\d+", ""), h);
+                    }
                 }
                 int columnCount = columnHeader.size();
                 List<String> dataInRow = null;
