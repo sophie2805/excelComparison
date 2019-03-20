@@ -73,8 +73,8 @@ public class DifferenceEngine {
 
 
     public static void main(String[] args) throws IOException {
-        WorkbookData source = new WorkbookData("/Users/Sophie/Downloads/starred.xlsx");
-        WorkbookData target = new WorkbookData("/Users/Sophie/Downloads/starred_target.xlsx");
+        WorkbookData source = new WorkbookData(args[0]);
+        WorkbookData target = new WorkbookData(args[1]);
         int sheetAmount = source.getSheetsData().size() >= target.getSheetsData().size() ?
                 source.getSheetsData().size() : target.getSheetsData().size();
 
